@@ -1,0 +1,6 @@
+app/dist
+app/node_modules
+server/node_modules
+
+# Editor directories and files
+.idea
