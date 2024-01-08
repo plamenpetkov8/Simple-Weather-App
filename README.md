@@ -2,8 +2,8 @@
 
 ## This GUI serves as a real-time weather observer using AccuWeather API. It gives the user the opportunity to:
 
-1. Search for almost any worldwide city in the world.
-2. Upon each character insertion/removal from the input field a suggestion list is provided giving the user the opportunity to make their choice from a dynamic dropdown of cities. Each city in this collection beggins with the phrase typed in the search field at that very moment. This list is sorted by the AccuWeather API's City Rank concept (factors such as population, political importance, and geographic size).
+1. Search for almost any city in the world.
+2. Upon each character insertion/removal from the input field a suggestion list is provided giving the user the opportunity to make their choice from a dynamic dropdown of cities. Each city in this collection begins with the phrase typed in the search field at that very moment. This list is sorted by the AccuWeather API's City Rank concept (factors such as population, political importance, and geographic size).
 3. After each location selection the following gets showed below the input field:
 
 - Main Weather Card presenting city's current weather
@@ -20,6 +20,10 @@
 
 ## How to build and start the project
 
+### Tech Stack used
+
+NodeJS(18), Docker(20), React(18)
+
 ### Prerequisites
 
 The project was developed using Node 18 (You could use `nvm` to easily install and switch between different versions of `node`). Additionally, the `OS` used was `OpenSUSE 15.3` and there should be no problems with the installation process on other Linux distrubitions. Follow these steps to build and observe the application:
@@ -31,7 +35,7 @@ The project was developed using Node 18 (You could use `nvm` to easily install a
    - over HTTP:
      `git clone https://github.com/plamenpetkov8/Simple-Weather-App.git`
 
-2. There are 2 ways to proceed:
+2. There are **2 ways** to proceed:
    - Manual Installation
    - Docker Installation
 
@@ -48,15 +52,21 @@ The project was developed using Node 18 (You could use `nvm` to easily install a
 3. Build the project:
 
    ```bash
-       VITE_WEATHER_API_KEY="<custom_api_key>" VITE_SERVER_PORT=<server_port> npm run dev
+       VITE_WEATHER_API_KEY="<custom_api_key>" VITE_SERVER_PORT=<server_port> npm run build
    ```
 
-   Placeholders:
+   **Placeholders:**
 
    - **custom_api_key**: Use custom AccuWeather API Key (register on their site, "Add a new App" (make sure to select "Core Weather Limited Trial") and copy your new key. Keep in mind that if using free plan, each app is given only 50 requests per day. When that happens, just remove your app and create a new one. Voila! )
    - **server_port**: The port of the server. Make sure you use the same port as the one used later initializing the server.
 
    **NOTE:** The above command will produce a **./dist** folder
+
+   **Example:**
+
+   ```bash
+   VITE_WEATHER_API_KEY="AbCdEfGhIjKlMnOp" VITE_SERVER_PORT=7777 npm run build
+   ```
 
 4. Install a useful tool that would host our newly built app:
    ```bash
@@ -68,80 +78,133 @@ The project was developed using Node 18 (You could use `nvm` to easily install a
    serve -p <host_port> -s dist
    ```
 
-   Placeholders:
+   **Placeholders:**
 
-   - host_port: The port we are telling **`serve`** to serve our gui on
+   - **host_port:** The port we are telling **`serve`** to serve our gui on
+
+   **Example:**
+
+   ```bash
+   serve -p 3006 -s dist
+   ```
 
 6. In the terminal you could see a rectangle with a green border looking like this (if we use port 3000 otherwise it would be different):
 
    ![Alt text](img/installation-thumbnail.png)
 
 7. Use any of the addresses provided later to view the App!
-8. Navigate to the **server** namespace:
+8. Open a new Terminal and navigate to the **root** of the project
+9. Navigate to the **server** namespace:
 
    ```bash
-   cd ..
+   cd ./server
    ```
 
-9. Install module's dependencies:
-   ```bash
-   npm install
-   ```
-10. Fire the server:
+10. Install module's dependencies:
+    ```bash
+    npm install
+    ```
+11. Fire the server:
 
     ```bash
     PORT=<server_port> node index.mjs
     ```
 
-    Placeholders:
+    **Placeholders:**
 
-    - server_port: The port the servevr will be listening on.  
-      NOTE: It must be the same as App's one used for http calls
+    - **server_port:** The port the servevr will be listening on.  
+      **NOTE:** It must be the same as App's one used for http calls
 
-11. Enjoy the app!!!
+    **Example:**
+
+    ```bash
+    PORT=7777 node index.mjs
+    ```
+
+12. Enjoy the app!!!
 
 #### Docker installation
 
 1. From the root of the project, navigate to **/app**:
-   ````bash
-   cd ./app ```
-   ````
+   ```bash
+   cd ./app
+   ```
 2. Create App's **Docker Image**:
+
    ```bash
-    docker build --no-cache --build-arg vite_server_port=<server_port> -t weather-app .
+    docker build --no-cache --build-arg hosted_on_port=<port> --build-arg vite_weather_api_key="<weather_api_key>" --build-arg vite_server_port=<server_port> -t weather-app .
    ```
-   Placeholders:
-   - server_port: The port our server will be listening on. We need it to match the real one to make proper `http` requests
+
+   **Placeholders:**
+
+   - **port:** The port of the host our app is going to be hosted on
+   - **vite_weather_api_key:** Use custom AccuWeather API Key (register on their site, "Add a new App" (make sure to select "Core Weather Limited Trial") and copy your new key. Keep in mind that if using free plan, each app is given only 50 requests per day. When that happens, just remove your app and create a new one. Voila! )
+   - **server_port:** The port our server will be listening on. We need it to match the real one to make proper `http` requests
+
+   **Example:**
+
+   ```bash
+   docker build --no-cache --build-arg hosted_on_port=3006 --build-arg vite_weather_api_key="AbCdEfGhIjKlMnOp" --build-arg vite_server_port=7777 -t weather-app .
+   ```
+
 3. Run the newly created image:
+
    ```bash
-     docker run -p <container_port>:<our_host_port> weather-app
+   docker run -dti -p <container_port>:<our_host_port> weather-app "-p" <hosted_on_port>
    ```
-   Placeholders:
-   - container_port: The port our app will be hosted on inside the container
-   - our_host_port: The port in the "outside world" we want to map to  
-     **NOTE:** **container_port** and **our_host_port** must be the same
-4. Navigate to the `server` namespace:
+
+   **Placeholders:**
+
+   - **container_port:** The port our app will be hosted on inside the container
+   - **our_host_port:** The port in the "outside world" we want to map to
+   - **hosted_on_port:** Explicitly selected port to host the app on
+     **NOTE:** **container_port**, **our_host_port** and **hosted_on_port** must be the same
+
+   **Example:**
+
    ```bash
-   cd ../server
+   docker run -dti -p 3006:3006 weather-app "-p" 3006
    ```
-5. Create Server's **Docker Image**:
+
+4. Open a new Terminal and navigate to the **root** of the project
+5. Navigate to the **./server** namespace:
+   ```bash
+   cd ./server
+   ```
+6. Create Server's **Docker Image**:
 
    ```bash
     docker build --no-cache --build-arg port=<server_port> -t weather-server .
    ```
 
-   Placeholders:
+   **Placeholders:**
 
-   - port: The port our server will be listening to
+   - **port:** The port our server will be listening to
 
    **NOTE:** Must be the same as App's one used for http calls
 
-6. Run the newly created image:
+   **Example:**
+
    ```bash
-     docker run -p <container_port>:<outside_port> weather-server
+   docker build --no-cache --build-arg port=7777 -t weather-server .
    ```
-   Placeholders:
-   - container_port: The port our server will be listening on inside the container
-   - outside_port: The port in the "outside world" we want to map to  
+
+7. Run the newly created image:
+
+   ```bash
+     docker run -dti -p <container_port>:<outside_port> weather-server
+   ```
+
+   **Placeholders:**
+
+   - **container_port:** The port our server will be listening on inside the container
+   - **outside_port:** The port in the "outside world" we want to map to  
      **NOTE:** **container_port** and **outside_port** must be the same
-7. Enjoy the app!!!
+
+   **Example:**
+
+   ```bash
+     docker run -dti -p 7777:7777 weather-server
+   ```
+
+8. Enjoy the app!!!
