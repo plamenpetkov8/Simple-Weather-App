@@ -22,7 +22,7 @@
 
 ### Tech Stack used
 
-NodeJS(18), Docker(20), React(18)
+NodeJS(18), Docker(20), React(18), Express(4), MongoDb(4), MongoDb Atlas
 
 ### Prerequisites
 
