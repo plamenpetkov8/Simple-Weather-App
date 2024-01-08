@@ -1,0 +1,12 @@
+#root {
+  flex-grow: 1;
+  display: "flex";
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+}
