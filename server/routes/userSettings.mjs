@@ -39,7 +39,7 @@ router.patch("/update", async (req, res) => {
     !req?.body?.theme ||
     !req?.body?.temperatureUnit
   ) {
-    res.send("Invalid Data Type".status(400));
+    res.send("Invalid Data Type").status(400);
     return;
   }
 

@@ -10,6 +10,7 @@ function MainWeatherCard() {
   const { temperatureUnit } = useUserSettings();
 
   // Derived States
+  const fixedTempValue = temperatureUnit !== "F" ? "C" : "F";
   const displayLocation = `${currentCity}, ${currentArea}, ${currentCountry}`;
   const heading = displayLocation;
 
@@ -23,10 +24,9 @@ function MainWeatherCard() {
   ];
 
   const temperature = `${Math.round(
-    currentForecast?.Temperature[
-      temperatureUnit === "C" ? "Metric" : "Imperial"
-    ]?.Value
-  )}\xB0${temperatureUnit}`;
+    currentForecast?.Temperature[fixedTempValue === "C" ? "Metric" : "Imperial"]
+      ?.Value,
+  )}\xB0${fixedTempValue}`;
 
   const details = currentForecast?.WeatherText;
   const headingAction = <FavouritesButton />;

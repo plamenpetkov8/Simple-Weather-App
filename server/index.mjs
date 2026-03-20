@@ -6,9 +6,6 @@ import posts from "./routes/favourites.mjs";
 import userSettings from "./routes/userSettings.mjs";
 
 const PORT = process.env.PORT || 5050;
-
-console.log(PORT);
-
 const app = express();
 
 app.use(cors());

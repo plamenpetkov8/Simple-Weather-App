@@ -29,9 +29,11 @@ function WeatherCardsList() {
         minHeight: WEATHER_CARD_LIST_MINHEIGHT,
       }}
     >
-      {forecasts?.map((forecast) => (
-        <AdvancedWeatherCard key={forecast?.EpochDate} forecast={forecast} />
-      ))}
+      {forecasts?.map((forecast) =>
+        forecast?.EpochDate ? (
+          <AdvancedWeatherCard key={forecast?.EpochDate} forecast={forecast} />
+        ) : null,
+      )}
     </Stack>
   );
 }

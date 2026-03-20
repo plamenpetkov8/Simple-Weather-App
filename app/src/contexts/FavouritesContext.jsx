@@ -12,6 +12,7 @@ const initialState = {
 };
 
 const SERVER_PORT = import.meta.env.VITE_SERVER_PORT || DEFAULT_PORT;
+
 function reducer(state, action) {
   switch (action.type) {
     case "favourite/added":
@@ -24,7 +25,7 @@ function reducer(state, action) {
       return {
         ...state,
         favourites: state.favourites.filter(
-          (item) => item.id !== action.payload
+          (item) => item.id !== action.payload,
         ),
         error: null,
       };
@@ -64,7 +65,7 @@ function FavouritesProvider({ children }) {
         dispatch({ type: "loadingFavourites" });
 
         const res = await fetch(
-          `http://localhost:${SERVER_PORT}/favourites/get`
+          `http://localhost:${SERVER_PORT}/favourites/get`,
         );
 
         // In this case we don't really care what the error message is.
@@ -101,7 +102,7 @@ function FavouritesProvider({ children }) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(favourites),
-          }
+          },
         );
 
         // In this case we don't really care what the error message is.
@@ -162,7 +163,7 @@ function useFavourites() {
   const context = useContext(FavouritesContext);
   if (context === undefined)
     throw new Error(
-      "FavouritesContext was used outside the FavouritesProvider"
+      "FavouritesContext was used outside the FavouritesProvider",
     );
   return context;
 }

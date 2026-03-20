@@ -5,10 +5,10 @@ import { useUserSettings } from "../../contexts/UserSettingsContext";
 
 function UnitSwitch() {
   const { temperatureUnit, toggleTemperatureUnit } = useUserSettings();
-  const [isChecked, setIsChecked] = useState(temperatureUnit !== "C");
+  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
-    if (isChecked === (temperatureUnit !== "C")) return;
+    if (!temperatureUnit || isChecked === (temperatureUnit !== "C")) return;
 
     setIsChecked(temperatureUnit !== "C");
 

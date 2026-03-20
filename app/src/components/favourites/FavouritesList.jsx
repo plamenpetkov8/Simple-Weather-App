@@ -14,9 +14,9 @@ function FavouritesList() {
         bgcolor: "background.paper",
       }}
     >
-      {favourites.map((item) => (
-        <FavouritesListItem data={item} />
-      ))}
+      {favourites.map((item) =>
+        item?.id ? <FavouritesListItem key={item?.id} data={item} /> : null,
+      )}
     </List>
   );
 }
