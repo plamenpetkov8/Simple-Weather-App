@@ -30,8 +30,8 @@ const DEFAULT_CITY_LIST = [
 ];
 
 const DEFAULT_THEME = "dark";
-const DEFAULT_TEMPERATURE_UNIT = "C";
-const BASE_ACCUWEATHER_URL = "http://dataservice.accuweather.com";
+const DEFAULT_TEMPERATURE_UNIT = "";
+const BASE_ACCUWEATHER_URL = "https://dataservice.accuweather.com";
 const WEATHER_CARD_STYLES = {
   maxWidth: 345,
   minHeight: 200,

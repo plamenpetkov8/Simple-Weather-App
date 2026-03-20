@@ -41,14 +41,11 @@ function reducer(state, action) {
 }
 
 var SERVER_PORT = import.meta.env.VITE_SERVER_PORT;
-console.log("VITE SERVER PORT");
-console.log(SERVER_PORT);
-
 SERVER_PORT = SERVER_PORT || DEFAULT_PORT;
 function UserSettingsProvider({ children }) {
   const [{ theme, temperatureUnit }, dispatch] = useReducer(
     reducer,
-    initialState
+    initialState,
   );
   const errorToast = useToastFactory();
 
@@ -57,7 +54,7 @@ function UserSettingsProvider({ children }) {
     async function getUserSettings() {
       try {
         const res = await fetch(
-          `http://localhost:${SERVER_PORT}/userSettings/get`
+          `http://localhost:${SERVER_PORT}/userSettings/get`,
         );
 
         // In this case we don't really care what the error message is.
@@ -72,7 +69,8 @@ function UserSettingsProvider({ children }) {
         }
 
         dispatch({ type: "userSettings/loaded", payload: resData.data });
-      } catch {
+      } catch (e) {
+        console.error(e.message);
         errorToast("There was an error loading the User Settings from Db...");
       }
     }
@@ -94,7 +92,7 @@ function UserSettingsProvider({ children }) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ theme, temperatureUnit }),
-          }
+          },
         );
 
         // In this case we don't really care what the error message is.
@@ -113,7 +111,7 @@ function UserSettingsProvider({ children }) {
   // Synchronize all toasters' theme with App's theme
   useEffect(() => {
     toastRefArray.forEach((toastRef) =>
-      toast.update(toastRef, { theme: theme })
+      toast.update(toastRef, { theme: theme }),
     );
   }, [theme]);
 
@@ -162,7 +160,7 @@ function useUserSettings() {
   const context = useContext(UserSettingsContext);
   if (context === undefined)
     throw new Error(
-      "UserSettingsContext was used outside the UserSettingsProvider"
+      "UserSettingsContext was used outside the UserSettingsProvider",
     );
   return context;
 }

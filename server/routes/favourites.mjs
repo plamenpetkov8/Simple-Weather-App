@@ -34,8 +34,6 @@ router.patch("/update", async (req, res) => {
       "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   });
 
-  console.log(req?.body);
-
   if (!Array.isArray(req?.body)) {
     res.send("Invalid Data Type".status(400));
     return;
@@ -50,6 +48,7 @@ router.patch("/update", async (req, res) => {
   try {
     const collection = await db.collection("favourites");
     const result = await collection.updateOne({}, updates);
+
     res.send(result).status(200);
   } catch (e) {
     // 501/502 - Bad Request

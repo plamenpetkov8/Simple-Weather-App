@@ -127,7 +127,7 @@ function WeatherProvider({ children }) {
   useEffect(() => {
     if (!API_KEY?.length)
       errorToast(
-        "Missing or empty AccuWeather API Key. Provide it and reload the App"
+        "Missing or empty AccuWeather API Key. Provide it and reload the App",
       );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,7 +156,7 @@ function WeatherProvider({ children }) {
         // TODO Uncomment when possible
         const res = await fetch(
           `${BASE_ACCUWEATHER_URL}/currentconditions/v1/${currentCityCode}?apikey=${API_KEY}`,
-          { signal: getCurrForController.signal }
+          { signal: getCurrForController.signal },
         );
 
         // In this case we don't really care what the error message is.
@@ -167,7 +167,11 @@ function WeatherProvider({ children }) {
 
         // "data" is array containing single object
         dispatch({ type: "currForecast/loaded", payload: data[0] });
-      } catch {
+      } catch (e) {
+        if (e?.cause === "AbortError") {
+          return;
+        }
+
         dispatch({
           type: "currForecast/rejected",
           payload: "There was an error loading city's current forecast...",
@@ -182,9 +186,9 @@ function WeatherProvider({ children }) {
       try {
         const res = await fetch(
           `${BASE_ACCUWEATHER_URL}/forecasts/v1/daily/5day/${currentCityCode}?apikey=${API_KEY}&metric=${
-            temperatureUnit === "C"
+            temperatureUnit !== "F"
           }`,
-          { signal: get5DayForController.signal }
+          { signal: get5DayForController.signal },
         );
 
         // In this case we don't really care what the error message is.
@@ -194,7 +198,11 @@ function WeatherProvider({ children }) {
         const data = await res.json();
 
         dispatch({ type: "5DayForecast/loaded", payload: data });
-      } catch {
+      } catch (e) {
+        if (e?.cause === "AbortError") {
+          return;
+        }
+
         dispatch({
           type: "5DayForecast/rejected",
           payload:
@@ -208,8 +216,15 @@ function WeatherProvider({ children }) {
     get5DayForecast();
 
     return () => {
-      getCurrForController.abort();
-      get5DayForController.abort();
+      getCurrForController.abort(
+        new Error("Current city changed", { cause: "AbortError" }),
+      );
+
+      get5DayForController.abort(
+        new Error("New 5day forecast needed as city changed", {
+          cause: "AbortError",
+        }),
+      );
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -218,7 +233,8 @@ function WeatherProvider({ children }) {
   useEffect(() => {
     if (!fiveDayForecast) return;
 
-    dispatch({ type: "tempUnit/change", payload: temperatureUnit });
+    const fixedTempVal = temperatureUnit !== "F" ? "C" : "F";
+    dispatch({ type: "tempUnit/change", payload: fixedTempVal });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [temperatureUnit]);
@@ -233,7 +249,7 @@ function WeatherProvider({ children }) {
     try {
       const res = await fetch(
         `${BASE_ACCUWEATHER_URL}/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${chunk}`,
-        { signal: getCityController.signal }
+        { signal: getCityController.signal },
       );
 
       // In this case we don't really care what the error message is.
@@ -281,7 +297,7 @@ function WeatherProvider({ children }) {
     try {
       const res = await fetch(
         `${BASE_ACCUWEATHER_URL}/locations/v1/cities/geoposition/search?apikey=${API_KEY}&q=${lat},${lng}`,
-        { signal: getCityByCoordController.signal }
+        { signal: getCityByCoordController.signal },
       );
 
       // In this case we don't really care what the error message is.

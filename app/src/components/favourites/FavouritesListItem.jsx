@@ -44,13 +44,13 @@ function FavouritesListItem({ data }) {
         <Avatar
           alt={`${WeatherText}`}
           src={`/assets/${WeatherIcon}.png`}
-          key={`favourite${EpochTime}`}
+          // key={`favourite${EpochTime}`}
         />
       </ListItemAvatar>
       <ListItemText
         primary={`${displayName}`}
         secondary={`${Math.round(
-          temperatureUnit === "C" ? CelsiusValue : FahrenheitValue
+          temperatureUnit !== "F" ? CelsiusValue : FahrenheitValue,
         )}\xB0${temperatureUnit}`}
       />
     </ListItemButton>

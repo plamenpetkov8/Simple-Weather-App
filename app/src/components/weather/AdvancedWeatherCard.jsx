@@ -23,7 +23,8 @@ function AdvancedWeatherCard({ forecast }) {
 
   const minTemp = Math.round(forecast?.Temperature?.Minimum?.Value);
   const maxTemp = Math.round(forecast?.Temperature?.Maximum?.Value);
-  const temperature = `${minTemp}\xB0${temperatureUnit} - ${maxTemp}\xB0${temperatureUnit}`;
+  const fixedTempValue = temperatureUnit !== "F" ? "C" : "F";
+  const temperature = `${minTemp}\xB0${fixedTempValue} - ${maxTemp}\xB0${fixedTempValue}`;
   const details = (
     <>
       <span>
